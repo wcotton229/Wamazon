@@ -1,0 +1,24 @@
+{
+  "name": "Wamazon",
+  "version": "1.0.0",
+  "description": "Wamazon App",
+  "main": "wamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wcotton229/Wamazon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wcotton229/Wamazon/issues"
+  },
+  "homepage": "https://github.com/wcotton229/Wamazon#readme",
+  "dependencies": {
+    "inquirer": "^5.2.0",
+    "mysql": "^2.15.0"
+  }
+}
