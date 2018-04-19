@@ -1,5 +1,8 @@
 var inquirer = require('inquirer');
 var mysql = require('mysql');
+var Table = require('cli-table');
+
+
 var connection = mysql.createConnection({
 	host: 'localhost',
 	port: 3306,
@@ -28,22 +31,25 @@ function managerInput(){
 		choices: ['1) View Products for sale', '2) View low inventory', '3) Add to inventory', '4) Add new product']
 	}]).then(function(answer){
 		if(answer.input === '1) View Products for sale'){
-			connection.query('SELECT * FROM products', function(err, res){
+			connection.query('SELECT * FROM products', function(err, data){
 			if (err) throw err;
 			console.log('');
 			console.log('========================ITEMS IN STORE=======================');
-			for(i=0;i<res.length;i++){
-                console.log(
-                    `
- Item ID: ${res[i].item_id}
- Product Name: ${res[i].product_name}
- Price: $${res[i].price}
- Quantity in stock: ${res[i].stock_quantity}`);
-                
-				
-				console.log('---------------------');
+			for(i=0;i<data.length;i++){
+             // instantiate 
+            var table = new Table({
+                head: ['Item ID', 'Product Name', 'Department', 'Price']
+                , colWidths: [20, 40, 20, 20]
+            });
+
+            // table is an Array, so you can `push`, `unshift`, `splice` and friends 
+            table.push(
+                [data[i].item_id, data[i].product_name, data[i].department_name, '$ ' + data[i].price]
+            );
+
+            console.log(table.toString());
 			}
-			console.log('')
+			console.log('');
 			newTransaction();
 			})
 		}

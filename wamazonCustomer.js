@@ -1,5 +1,6 @@
 var inquirer = require("inquirer");
 var mysql = require('mysql');
+var Table = require('cli-table');
 
 
 var connection = mysql.createConnection({
@@ -52,10 +53,10 @@ function promptUserPurchase() {
     ]).then(function (answer) {
         var item = answer.item_id;
         // console.log(answer.item_id);
-        
+
         var quantity = answer.quantity;
         // console.log(answer.quantity);
-        
+
 
 
         var querySelect = 'SELECT * FROM products WHERE ?';
@@ -103,35 +104,40 @@ function displayInventory() {
         if (err) throw err;
 
         console.log('');
-		console.log('========================ITEMS IN STORE=======================');
+        console.log('========================ITEMS IN STORE=======================');
 
         for (var i = 0; i < data.length; i++) {
-            console.log(`
-Item ID: ${data[i].item_id}
-Product Name: ${data[i].product_name} 
-Department: ${data[i].department_name} 
-Price: $${data[i].price} `);
-            console.log('---------------------');
             
+            // instantiate 
+            var table = new Table({
+                head: ['Item ID', 'Product Name', 'Department', 'Price']
+                , colWidths: [20, 40, 20, 20]
+            });
+            table.push(
+                [data[i].item_id, data[i].product_name, data[i].department_name, '$ ' + data[i].price]
+            );
+
+            console.log(table.toString());
+
         }
-            promptUserPurchase();
+        promptUserPurchase();
     })
 }
 
-function newOrder(){
-	inquirer.prompt([{
-		type: 'confirm',
-		name: 'choice',
-		message: 'Would you like to place another order?'
-	}]).then(function(answer){
-		if(answer.choice){
-			promptUserPurchase();
-		}
-		else{
-			console.log('Thank you for shopping at Wamazon!');
-			connection.end();
-		}
-	})
+function newOrder() {
+    inquirer.prompt([{
+        type: 'confirm',
+        name: 'choice',
+        message: 'Would you like to place another order?'
+    }]).then(function (answer) {
+        if (answer.choice) {
+            promptUserPurchase();
+        }
+        else {
+            console.log('Thank you for shopping at Wamazon!');
+            connection.end();
+        }
+    })
 };
 
 function runWamazon() {
