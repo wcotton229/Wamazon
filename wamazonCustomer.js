@@ -49,18 +49,22 @@ function promptUserPurchase() {
             validate: validateInput,
             filter: Number
         }
-    ]).then(function (input) {
-        var item = input.id;
-        var quantity = input.quantity;
+    ]).then(function (answer) {
+        var item = answer.item_id;
+        // console.log(answer.item_id);
+        
+        var quantity = answer.quantity;
+        // console.log(answer.quantity);
+        
 
 
-        var querySelect = 'SELECT * FROM producats WHERE?';
+        var querySelect = 'SELECT * FROM products WHERE ?';
 
-        connection.query(querySelect, { id: id }, function (err, data) {
+        connection.query(querySelect, { item_id: item }, function (err, data) {
             if (err) throw err;
 
             if (data.length === 0) {
-                console.log('Invalid item ID. Please select a valid ID');
+                console.log('Invalid item ID. Please select a valid ID.');
                 displayInventory();
             }
             else {
@@ -69,24 +73,24 @@ function promptUserPurchase() {
                 if (quantity <= productData.stock_quantity) {
                     console.log('The product you requested is in stock! Placing your order!');
 
-                    var updateQueryStr = 'UPDATE products SET stock_quantity = ' + (productData.stock_quantity - quantity) + 'WHERE id = ' + item;
+                    var updateQueryStr = 'UPDATE products SET stock_quantity = ' + (productData.stock_quantity - quantity) + ' WHERE item_id = ' + item;
 
                     connection.query(updateQueryStr, function (err, data) {
                         if (err) throw err;
 
                         console.log('Your order has been placed! Your total is $' + productData.price * quantity);
-                        console.log('Thank you for shopping with us!');
                         console.log('\n-----------------------------\n');
 
-                        // connection.end();
+                        newOrder();
                     })
                 } else {
                     console.log('Sorry, there is not enough product in stock, your order can not be placed as is.');
                     console.log('Please change your order.');
                     console.log('\n-----------------------------\n');
 
-                    displayInventory();
+                    promptUserPurchase();
                 }
+
             };
         });
     });
@@ -98,24 +102,37 @@ function displayInventory() {
     connection.query(queryStr, function (err, data) {
         if (err) throw err;
 
-        console.log('Existing Inventory: ');
-        console.log('..............\n');
+        console.log('');
+		console.log('========================ITEMS IN STORE=======================');
 
-        var strOut = '';
         for (var i = 0; i < data.length; i++) {
-            strOut = '';
-            strOut += 'Item ID: ' + data[i].id + ' // ';
-            strOut += 'Product Name: ' = data[i].product_name + ' // ';
-            strOut += 'Department: ' + data[i].department_name + ' // ';
-            strOut += 'Price: $' + data[i].price + '\n';
-
-            console.log(strOut);
+            console.log(`
+Item ID: ${data[i].item_id}
+Product Name: ${data[i].product_name} 
+Department: ${data[i].department_name} 
+Price: $${data[i].price} `);
+            console.log('---------------------');
+            
         }
-
-            console.log("-----------------------------------------\n");
             promptUserPurchase();
     })
 }
+
+function newOrder(){
+	inquirer.prompt([{
+		type: 'confirm',
+		name: 'choice',
+		message: 'Would you like to place another order?'
+	}]).then(function(answer){
+		if(answer.choice){
+			promptUserPurchase();
+		}
+		else{
+			console.log('Thank you for shopping at Wamazon!');
+			connection.end();
+		}
+	})
+};
 
 function runWamazon() {
 
