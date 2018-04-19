@@ -106,19 +106,21 @@ function displayInventory() {
         console.log('');
         console.log('========================ITEMS IN STORE=======================');
 
-        for (var i = 0; i < data.length; i++) {
-            
-            // instantiate 
-            var table = new Table({
-                head: ['Item ID', 'Product Name', 'Department', 'Price']
-                , colWidths: [20, 40, 20, 20]
-            });
-            table.push(
-                [data[i].item_id, data[i].product_name, data[i].department_name, '$ ' + data[i].price]
-            );
+        // instantiate 
+        var table = new Table({
+            head: ['Item ID', 'Product Name', 'Department', 'Price'],
+            style: {
+                head: ['red'],
+                compact: false,
+                colAligns: ['center'],
+            }
+        });
+        for(i=0;i<data.length;i++){
+        table.push(
+            [data[i].item_id, data[i].product_name, data[i].department_name, '$ ' + data[i].price]
+        );
 
-            console.log(table.toString());
-
+        console.log(table.toString());
         }
         promptUserPurchase();
     })

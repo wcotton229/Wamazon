@@ -35,14 +35,16 @@ function managerInput(){
 			if (err) throw err;
 			console.log('');
 			console.log('========================ITEMS IN STORE=======================');
-			for(i=0;i<data.length;i++){
-             // instantiate 
+            // instantiate 
             var table = new Table({
-                head: ['Item ID', 'Product Name', 'Department', 'Price']
-                , colWidths: [20, 40, 20, 20]
+                head: ['Item ID', 'Product Name', 'Department', 'Price'],
+                style: {
+                    head: ['red'],
+                    compact: false,
+                    colAligns: ['center'],
+                }
             });
-
-            // table is an Array, so you can `push`, `unshift`, `splice` and friends 
+            for(i=0;i<data.length;i++){
             table.push(
                 [data[i].item_id, data[i].product_name, data[i].department_name, '$ ' + data[i].price]
             );
