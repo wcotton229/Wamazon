@@ -115,13 +115,13 @@ function displayInventory() {
                 colAligns: ['center'],
             }
         });
-        for(i=0;i<data.length;i++){
-        table.push(
-            [data[i].item_id, data[i].product_name, data[i].department_name, '$ ' + data[i].price]
-        );
+        for (i = 0; i < data.length; i++) {
+            table.push(
+                [data[i].item_id, data[i].product_name, data[i].department_name, '$ ' + data[i].price]
+            );
 
-        console.log(table.toString());
         }
+        console.log(table.toString());
         promptUserPurchase();
     })
 }

@@ -48,9 +48,9 @@ function managerInput(){
             table.push(
                 [data[i].item_id, data[i].product_name, data[i].department_name, '$ ' + data[i].price]
             );
-
+                
+        }
             console.log(table.toString());
-			}
 			console.log('');
 			newTransaction();
 			})
